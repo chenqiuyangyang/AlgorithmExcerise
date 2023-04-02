@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class Set {
+        items;
+        constructor() {
+          this.items = {};
+        }
+        //如果值在集合中，返回true，否则返回false
+        has(value) {
+          return this.items.hasOwnProperty(value);
+        }
+        //向集合添加一个新的项
+        add(value) {
+          if (!this.has(value)) {
+            this.items[value] = value;
+            return true;
+          }
+          return false;
+        }
+        //移除集合中的项
+        remove(value) {
+          if (this.has(value)) {
+            delete this.items[value];
+            return true;
+          }
+          return false;
+        }
+        //返回集合所包含元素的数量
+        size() {
+          //JS中Object类有一个keys方法，它返回一个包含给定对象所有属性的数组(ES6)
+          return Object.keys(this.items).length;
+        }
+        //返回一个包含集合中所有值的数组
+        values() {
+          let values = [];
+          for (
+            let i = 0, keys = Object.keys(this.items);
+            i < keys.length;
+            i++
+          ) {
+            values.push(this.items[keys[i]]);
+          }
+          return values;
+        }
+
+        //并集
+        union(otherSet) {
+          let unionSet = new Set();
+          let values = this.values();
+          for (let i = 0; i < values.length; i++) {
+            unionSet.add(values[i]);
+          }
+          values = otherSet.values();
+          for (let i = 0; i < values.length; i++) {
+            unionSet.add(values[i]);
+          }
+          return unionSet;
+        }
+        //交集
+        intersection(otherSet) {
+          let intersectionSet = new Set();
+          let values = this.values();
+          for (let i = 0; i < values.length; i++) {
+            if (otherSet.has(values[i])) {
+              intersectionSet.add(values[i]);
+            }
+          }
+          return intersectionSet;
+        }
+        //差集
+        difference(otherSet) {
+          let differenceSet = new Set();
+          let values = this.values();
+          for (let i = 0; i < values.length; i++) {
+            if (!otherSet.has(values[i])) {
+              differenceSet.add(values[i]);
+            }
+          }
+          return differenceSet;
+        }
+        //子集
+        subset(otherSet) {
+          if (this.size() > otherSet.size()) {
+            return false;
+          } else {
+            let values = this.values();
+            for (let i = 0; i < values.length; i++) {
+              if (!otherSet.has(values[i])) {
+                return false;
+              }
+            }
+            return true;
+          }
+        }
+      }
+      let set = new Set();
+      set.add(1);
+      console.log(set.values()); //输出["1"]  Array
+      console.log(set.has(1)); //输出true
+      console.log(set.size()); //输出1
+      set.add(2);
+      console.log(set.values()); //输出["1", "2"]
+      console.log(set.has(2)); //true
+      console.log(set.size()); //2
+      set.remove(1);
+      console.log(set.values()); //输出["2"]
+      set.remove(2);
+      console.log(set.values()); //输出[]
+
+      let setA = new Set();
+      setA.add(1);
+      setA.add(2);
+      setA.add(3);
+      let setB = new Set();
+      setB.add(3);
+      setB.add(4);
+      setB.add(5);
+      setB.add(6);
+      let unionAB = setA.union(setB);
+      console.log(unionAB.values());
+    </script>
+  </body>
+</html>

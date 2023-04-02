@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let set = new Set();
+      set.add(1);
+      console.log(set.values()); // 输出集合中所有值 SetIterator
+      console.log(set.has(1)); // 输出true
+      console.log(set.size); // 输出1
+
+      class Sets {
+        union(setA, setB) {
+          let unionSet = new Set();
+          for (let x of setA) unionSet.add(x);
+          for (let x of setB) unionSet.add(x);
+          return unionSet;
+        }
+        intersection(setA, setB) {
+          let intersectionSet = new Set();
+          for (let x of setA) {
+            if (setB.has(x)) {
+              intersectionSet.add(x);
+            }
+          }
+          return intersectionSet;
+        }
+        difference(setA, setB) {
+          let differenceSet = new Set();
+          for (let x of setA) {
+            if (!setB.has(x)) {
+              differenceSet.add(x);
+            }
+          }
+          return differenceSet;
+        }
+        subset(setA, setB) {
+          if (setA.size() > setB.size()) {
+            return false;
+          } else {
+            for (let x of setA) {
+              if (!setB.has(x)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        }
+      }
+
+      let setA = new Set();
+      setA.add(1);
+      setA.add(2);
+      setA.add(3);
+      let setB = new Set();
+      setB.add(2);
+      setB.add(3);
+      setB.add(4);
+      let sets = new Sets();
+      console.log(sets.union(setA, setB));
+    </script>
+  </body>
+</html>

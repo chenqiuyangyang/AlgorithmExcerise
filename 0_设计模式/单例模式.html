@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 单例模式是一种设计模式，可以确保一个类只有一个实例，并提供对该实例的全局访问点。
+      // 在这个实现中，使用了一个立即执行函数表达式（IIFE）来创建单例对象。
+      // createInstance 函数被包含在 IIFE 中，可以访问 instance 变量。
+      // Singleton 对象公开了一个 getInstance 方法，用于获取单例对象。
+      // 该方法首先检查是否已经创建了单例对象，如果没有，则调用 createInstance 函数来创建它。
+      // 由于 JavaScript 的函数是一等公民，因此我们可以使用闭包来访问变量，从而实现单例模式。
+
+      // 通过闭包和立即执行函数表达式创建单例对象
+      const Singleton = (function () {
+        let instance;
+
+        function createInstance() {
+          // 在这里创建单例对象
+          return {
+            // 属性和方法
+          };
+        }
+
+        return {
+          getInstance: function () {
+            if (!instance) {
+              instance = createInstance();
+            }
+            return instance;
+          },
+        };
+      })();
+
+      // 通过 Singleton.getInstance() 获取单例对象
+    </script>
+  </body>
+</html>

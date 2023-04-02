@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function BinarySearchTree() {
+        var Node = function (key) {
+          this.key = key;
+          this.left = null;
+          this.right = null;
+        };
+        var root = null;
+        // 向树中插入一个新的键
+        this.insert = function (key) {
+          var newNode = new Node(key);
+          if (root === null) {
+            root = newNode;
+          } else {
+            insertNode(root, newNode);
+          }
+        };
+        // 中序遍历
+        this.inOrderTraverse = function (callback) {
+          //callback回调函数（对节点进行的操作）
+          inOrderTraverseNode(root, callback);
+        };
+        // 先序遍历
+        this.preOrderTraverse = function (callback) {
+          preOrderTraverseNode(root, callback);
+        };
+        // 后序遍历
+        this.postOrderTraverse = function (callback) {
+          postOrderTraverseNode(root, callback);
+        };
+        // 搜索最小值
+        this.min = function () {
+          return minNode(root);
+        };
+        // 搜索最大值
+        this.max = function () {
+          return maxNode(root);
+        };
+        // 搜索特定的值
+        this.search = function (key) {
+          return searchNode(root, key);
+        };
+        // 移除一个节点
+        this.remove = function (key) {
+          root = removeNode(root, key);
+        };
+      }
+      var insertNode = function (node, newNode) {
+        if (newNode.key < node.key) {
+          if (node.left === null) {
+            node.left = newNode;
+          } else {
+            // 递归
+            insertNode(node.left, newNode);
+          }
+        } else {
+          if (node.right === null) {
+            node.right = newNode;
+          } else {
+            insertNode(node.right, newNode);
+          }
+        }
+      };
+      var inOrderTraverseNode = function (node, callback) {
+        if (node !== null) {
+          inOrderTraverseNode(node.left, callback);
+          callback(node.key);
+          inOrderTraverseNode(node.right, callback);
+        }
+      };
+      var preOrderTraverseNode = function (node, callback) {
+        if (node !== null) {
+          callback(node.key);
+          preOrderTraverseNode(node.left, callback);
+          preOrderTraverseNode(node.right, callback);
+        }
+      };
+      var postOrderTraverseNode = function (node, callback) {
+        if (node !== null) {
+          postOrderTraverseNode(node.left, callback);
+          postOrderTraverseNode(node.right, callback);
+          callback(node.key);
+        }
+      };
+      // 树的最左端的最下层 （叶子节点）
+      var minNode = function (node) {
+        if (node) {
+          while (node && node.left !== null) {
+            node = node.left;
+          }
+          return node.key;
+        }
+        return null;
+      };
+      // 二叉搜索树的最右端的最下层 （叶子节点）
+      var maxNode = function (node) {
+        if (node) {
+          while (node && node.right !== null) {
+            node = node.right;
+          }
+          return node.key;
+        }
+        return null;
+      };
+      var searchNode = function (node, key) {
+        if (node === null) {
+          return false;
+        }
+        if (key < node.key) {
+          return searchNode(node.left, key);
+        } else if (key > node.key) {
+          return searchNode(node.right, key);
+        } else {
+          return true;
+        }
+      };
+      var removeNode = function (node, key) {
+        if (node === null) {
+          return null;
+        }
+        if (key < node.key) {
+          node.left = removeNode(node.left, key);
+          return node; //{5}
+        } else if (key > node.key) {
+          node.right = removeNode(node.right, key);
+          return node;
+        } else {
+          //键等于node.key
+
+          //第一种情况——一个叶节点
+          if (node.left === null && node.right === null) {
+            node = null;
+            return node;
+          }
+          //第二种情况——一个只有一个子节点的节点
+          if (node.left === null) {
+            node = node.right;
+            return node;
+          } else if (node.right === null) {
+            node = node.left;
+            return node;
+          }
+          //第三种情况——一个有两个子节点的节点
+          var aux = findMinNode(node.right); //需要找到它右边子树中最小的节点
+          node.key = aux.key; //用它右侧子树中最小节点的键去更新这个节点的值
+          //这样在树中就有两个拥有相同键的节点了，这是不行的。
+          //要继续把右侧子树中的最小节点移除，毕竟它已经被移至要移除的节点的位置了
+          node.right = removeNode(node.right, aux.key);
+          //返回更新后节点的引用
+          return node;
+        }
+      };
+      //在min方法中只返回键，而在findMinNode中返回了节点
+      var findMinNode = function (node) {
+        while (node && node.left !== null) {
+          node = node.left;
+        }
+        return node;
+      };
+      var tree = new BinarySearchTree();
+      tree.insert(11);
+      function printNode(value) {
+        console.log(value);
+      }
+      tree.inOrderTraverse(printNode);
+    </script>
+  </body>
+</html>

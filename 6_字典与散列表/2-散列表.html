@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //散列算法的作用是尽可能快地在数据结构中找到一个值。
+      //散列函数的作用是给定一个键值，然后返回值在表中的地址。
+      //与其他的区别是：如果要在数据结构中获得一个值（使用get方法），需要遍历整个数据结构来找到它。
+      function HashTable() {
+        var table = [];
+        //方法：散列函数
+        // 给定一个key参数，我们就能根据组成key的每个字符的ASCII码值的和得到一个数字。所以，
+        // 首先需要一个变量来存储这个总和（行{1}）。然后，遍历key（行{2}）并将从ASCII表中查到
+        // 的每个字符对应的ASCII值加到hash变量中（可以使用JavaScript的String类中的charCodeAt
+        // 方法——行{3}）。最后，返回hash值。为了得到比较小的数值，我们会使用hash值和一个任意
+        // 数做除法的余数（mod）
+        var loseloseHashCode = function (key) {
+          var hash = 0; //{1}  存储位置
+          for (var i = 0; i < key.length; i++) {
+            //{2}
+            hash += key.charCodeAt(i); //{3}
+          }
+          return hash % 37; //{4}
+        };
+        //向散列表增加一个新的项
+        this.put = function (key, value) {
+          var position = loseloseHashCode(key); //根据所创建的散列函数计算出它在表中的位置
+          console.log(position + " - " + key); //将计算出的位置输出至控制台
+          table[position] = value; //是将value参数添加到用散列函数计算出的对应的位置上
+        };
+        //返回根据键值检索到的特定的值
+        this.get = function (key) {
+          //需要求出元素的位置（可以使用散列函数来获取）,根据这个位置从数组table中获得这个值
+          return table[loseloseHashCode(key)];
+        };
+        //根据键值从散列表中移除值
+        this.remove = function (key) {
+          table[loseloseHashCode(key)] = undefined;
+          // 需要求出元素的位置（可以使用散列函数来获取）并赋值为undefined
+        };
+      }
+    </script>
+  </body>
+</html>

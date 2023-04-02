@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 定义共享资源和信号量
+      const buffer = [];
+      const MAX_SIZE = 10;
+      //信号量
+      const semaphore = {
+        empty: MAX_SIZE,
+        full: 0,
+      };
+
+      // 定义生产者函数
+      function producer() {
+        while (true) {
+          // 生产数据
+          const data = Math.random();
+          // 等待空缓冲区
+          while (semaphore.empty <= 0) {
+            // 如果缓冲区已满，则等待消费者消费
+            console.log("缓冲区满了，等待消费中......");
+            sleep(1000);
+          }
+          // 加锁并将数据写入缓冲区
+          semaphore.empty--;
+          semaphore.full++;
+          buffer.push(data);
+          console.log(`Produced data: ${data}`);
+          // 解锁并通知消费者消费
+          semaphore.empty++;
+          semaphore.full--;
+          sleep(1000);
+        }
+      }
+
+      // 定义消费者函数
+      function consumer() {
+        while (true) {
+          // 等待满缓冲区
+          while (semaphore.full <= 0) {
+            // 如果缓冲区为空，则等待生产者生产
+            console.log("缓冲区空了，等待生产中......");
+            sleep(1000);
+          }
+          // 加锁并从缓冲区读取数据
+          semaphore.full--;
+          semaphore.empty++;
+          const data = buffer.shift();
+          console.log(`Consumed data: ${data}`);
+          // 解锁并通知生产者生产
+          semaphore.full++;
+          semaphore.empty--;
+          sleep(1000);
+        }
+      }
+
+      // 定义睡眠函数
+      function sleep(time) {
+        const start = Date.now();
+        while (Date.now() - start < time) {}
+      }
+
+      // 启动生产者和消费者线程
+      producer();
+      consumer();
+
+      // 在上面的代码中，共享资源是一个缓冲区（buffer），最大容量为MAX_SIZE。
+      // 生产者函数（producer）不断地生产数据，并将数据写入缓冲区。
+      // 消费者函数（consumer）不断地从缓冲区读取数据，并将数据消费。
+      // 为了保证线程安全，对缓冲区和信号量需要进行加锁操作。
+      // 在生产者和消费者模式中，需要保证生产者和消费者的同步。
+      // 当缓冲区已满时，生产者需要等待消费者消费；当缓冲区为空时，消费者需要等待生产者生产。
+      // 为了实现同步，需要使用信号量（semaphore）。在上面的代码中，empty信号量表示缓冲区中的空位置数，full信号量表示缓冲区中已经填充的位置数。
+      // 在生产者和消费者模式中，还需要考虑线程的调度问题。为了模拟线程调度，上面的代码中使用了睡眠函数（sleep）。
+    </script>
+  </body>
+</html>

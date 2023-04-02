@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //处理冲突有几种方法：分离链接、线性探查和双散列法。
+      // 方法一：分离链接法
+      // 分离链接法包括为散列表的每一个位置创建一个链表并将元素存储在里面。它是解决冲突的最简单的方法，但是它在HashTable实例之外还需要额外的存储空间。
+      // 需要重写3种方法：put、get和remove
+      function HashTable() {
+        var table = [];
+        //散列函数
+        var loseloseHashCode = function (key) {
+          var hash = 0;
+          for (var i = 0; i < key.length; i++) {
+            hash += key.charCodeAt(i);
+          }
+          return hash % 37;
+        };
+        //辅助类来表示将要加入LinkedList实例的元素
+        var ValuePair = function (key, value) {
+          this.key = key;
+          this.value = value;
+          this.toString = function () {
+            return "[" + this.key + " - " + this.value + "]";
+          };
+        };
+        //向散列表增加一个新的项
+        this.put = function (key, value) {
+          var position = loseloseHashCode(key);
+          if (table[position] == undefined) {
+            table[position] = new LinkedList();
+          }
+          //使用第5章中实现的append方法向LinkedList实例中添加一个ValuePair实例（键和值）
+          table[position].append(new ValuePair(key, value));
+        };
+        //返回根据键值检索到的特定的值
+        this.get = function (key) {
+          var position = loseloseHashCode(key);
+          if (table[position] !== undefined) {
+            //遍历链表来寻找键/值
+            var current = table[position].getHead(); //先获取链表表头的引用
+            while (current.next) {
+              if (current.element.key === key) {
+                return current.element.value;
+              }
+              current = current.next;
+            }
+          }
+          return undefined;
+        };
+        //根据键值从散列表中移除值
+        this.remove = function (key) {
+          var position = loseloseHashCode(key);
+          if (table[position] !== undefined) {
+            var current = table[position].getHead();
+            while (current.next) {
+              if (current.element.key === key) {
+                table[position].remove(current.element);
+                if (table[position].isEmpty()) {
+                  table[position] = undefined;
+                }
+                return true;
+              }
+              current = current.next;
+            }
+          }
+          return false;
+        };
+      }
+    </script>
+  </body>
+</html>

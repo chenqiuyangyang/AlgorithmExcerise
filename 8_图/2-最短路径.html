@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // BFS
+      // Dijkstra 算法
+      // Floyd-Warshall 算法
+      function Graph() {
+        // 使用一个数组来存储图中所有顶点的名字（行{1}），以及一个字典来存储邻接表（行{2}）。
+        // 字典将会使用顶点的名字作为键，邻接顶点列表作为值。
+        // vertices数组和adjList字典两者都是Graph类的私有属性。
+        var vertices = []; //{1}
+        var adjList = new Dictionary(); //{2}
+        // 向图中添加一个新的顶点
+        this.addVertex = function (v) {
+          vertices.push(v); //{3}
+          adjList.set(v, []); //{4}
+        };
+        // 添加顶点之间的边
+        this.addEdge = function (v, w) {
+          adjList.get(v).push(w); //{5}
+          adjList.get(w).push(v); //{6}
+        };
+        this.BFS = function (v) {
+          var color = initializeColor(),
+            queue = new Queue(),
+            d = [], //{1}
+            pred = []; //{2}
+          queue.enqueue(v);
+          for (var i = 0; i < vertices.length; i++) {
+            //{3}
+            d[vertices[i]] = 0; //{4}
+            pred[vertices[i]] = null; //{5}
+          }
+          while (!queue.isEmpty()) {
+            var u = queue.dequeue(),
+              neighbors = adjList.get(u);
+            color[u] = "grey";
+            for (i = 0; i < neighbors.length; i++) {
+              var w = neighbors[i];
+              if (color[w] === "white") {
+                color[w] = "grey";
+                d[w] = d[u] + 1; //{6}
+                pred[w] = u; //{7}
+                queue.enqueue(w);
+              }
+            }
+            color[u] = "black";
+          }
+          return {
+            //{8}
+            distances: d,
+            predecessors: pred,
+          };
+        };
+        // 最短路径算法——Dijkstra 算法
+        // Dijkstra算法是一种计算从单个源到所有其他源的最短路径的贪心算法
+        // 可以用它来计算从图的一个顶点到其余各顶点的最短路径
+        this.dijkstra = function (src) {
+          var dist = [],
+            visited = [],
+            length = this.graph.length;
+          for (var i = 0; i < length; i++) {
+            //{1}
+            dist[i] = INF;
+            visited[i] = false;
+          }
+          dist[src] = 0; //{2}
+          for (var i = 0; i < length - 1; i++) {
+            //{3}
+            var u = minDistance(dist, visited); //{4}
+            visited[u] = true; //{5}
+            for (var v = 0; v < length; v++) {
+              if (
+                !visited[v] &&
+                this.graph[u][v] != 0 &&
+                dist[u] != INF &&
+                dist[u] + this.graph[u][v] < dist[v]
+              ) {
+                //{6}
+                dist[v] = dist[u] + this.graph[u][v]; //{7}
+              }
+            }
+          }
+          return dist; //{8}
+        };
+        // Floyd-Warshall算法是一种计算图中所有最短路径的动态规划算法。
+        // 可以找出从所有源到所有顶点的最短路径。
+        this.floydWarshall = function () {
+          var dist = [],
+            length = this.graph.length,
+            i,
+            j,
+            k;
+          for (i = 0; i < length; i++) {
+            //{1}
+            dist[i] = [];
+            for (j = 0; j < length; j++) {
+              dist[i][j] = this.graph[i][j];
+            }
+          }
+          for (k = 0; k < length; k++) {
+            //{2}
+            for (i = 0; i < length; i++) {
+              for (j = 0; j < length; j++) {
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                  //{3}
+                  dist[i][j] = dist[i][k] + dist[k][j]; //{4}
+                }
+              }
+            }
+          }
+          return dist;
+        };
+      }
+    </script>
+  </body>
+</html>

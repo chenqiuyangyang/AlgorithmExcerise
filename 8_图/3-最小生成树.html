@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 最小生成树（MST）问题是网络设计中常见的问题。
+      // 想象一下，你的公司有几间办公室，要以最低的成本实现办公室电话线路相互连通，以节省资金，最好的办法是什么？
+      // 这也可以应用于岛桥问题。设想你要在n个岛屿之间建造桥梁，想用最低的成本实现所有岛屿相互连通。
+      //   图：任何社交网络，例如Facebook、Twitter和Google plus，都可以用图来表示。使用图来表示道路、航班以及通信状态
+      //   图的表示方法：邻接矩阵、邻接表、关联矩阵
+      function Graph() {
+        // 使用一个数组来存储图中所有顶点的名字（行{1}），以及一个字典来存储邻接表（行{2}）。
+        // 字典将会使用顶点的名字作为键，邻接顶点列表作为值。
+        // vertices数组和adjList字典两者都是Graph类的私有属性。
+        var vertices = []; //{1}
+        var adjList = new Dictionary(); //{2}
+        // 向图中添加一个新的顶点
+        this.addVertex = function (v) {
+          vertices.push(v); //{3}
+          adjList.set(v, []); //{4}
+        };
+        // 添加顶点之间的边
+        this.addEdge = function (v, w) {
+          adjList.get(v).push(w); //{5}
+          adjList.get(w).push(v); //{6}
+        };
+        this.toString = function () {
+          var s = "";
+          for (var i = 0; i < vertices.length; i++) {
+            //{10}
+            s += vertices[i] + " -> ";
+            var neighbors = adjList.get(vertices[i]); //{11}
+            for (var j = 0; j < neighbors.length; j++) {
+              //{12}
+              s += neighbors[j] + " ";
+            }
+            s += "\n"; //{13}
+          }
+          return s;
+        };
+        // Prim算法是一种求解加权无向连通图的MST问题的贪心算法。
+        // 它能找出一个边的子集，使得其构成的树包含图中所有顶点，且边的权值之和最小。
+        this.prim = function () {
+          var parent = [],
+            key = [],
+            visited = [];
+          (length = this.graph.length), i;
+          for (i = 0; i < length; i++) {
+            //{1}
+            key[i] = INF;
+            visited[i] = false;
+          }
+          key[0] = 0; //{2}
+          parent[0] = -1;
+          for (i = 0; i < length - 1; i++) {
+            //{3}
+            var u = minKey(key, visited); //{4}
+            visited[u] = true; //{5}
+            for (var v = 0; v < length; v++) {
+              if (
+                this.graph[u][v] &&
+                visited[v] == false &&
+                this.graph[u][v] < key[v]
+              ) {
+                //{6}
+                parent[v] = u; //{7}
+                key[v] = this.graph[u][v]; //{8}
+              }
+            }
+          }
+          return parent; //{9}
+        };
+        // Kruskal算法也是一种求加权无向连通图的MST的贪心算法
+        this.kruskal = function () {
+          var length = this.graph.length,
+            parent = [],
+            cost,
+            ne = 0,
+            a,
+            b,
+            u,
+            v,
+            i,
+            j,
+            min;
+          cost = initializeCost(); //{1}
+          while (ne < length - 1) {
+            //{2}
+            for (i = 0, min = INF; i < length; i++) {
+              //{3}
+              for (j = 0; j < length; j++) {
+                if (cost[i][j] < min) {
+                  min = cost[i][j];
+                  u = i;
+                  v = j;
+                }
+              }
+            }
+            u = find(u, parent); //{4}
+            v = find(v, parent); //{5}
+            if (union(u, v, parent)) {
+              //{6}
+              ne++;
+            }
+            cost[u][v] = cost[v][u] = INF; //{7}
+          }
+          return parent;
+        };
+      }
+    </script>
+  </body>
+</html>

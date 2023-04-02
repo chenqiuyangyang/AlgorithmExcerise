@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // function Queue() {
+      //   //这里是属性和方法
+      //   let items = [];
+      //   this.enqueue = function (element) {
+      //     items.push(element);
+      //   };
+      //   this.dequeue = function () {
+      //     return items.shift();
+      //   };
+      //   this.front = function () {
+      //     return items[0];
+      //   };
+      //   this.isEmpty = function () {
+      //     return items.length == 0;
+      //   };
+      //   this.size = function () {
+      //     return items.length;
+      //   };
+      //   this.print = function () {
+      //     console.log(items.toString());
+      //   };
+      // }
+      class Queue {
+        items;
+        constructor() {
+          this.items = [];
+        }
+        enqueue(element) {
+          this.items.push(element);
+        }
+        dequeue() {
+          return this.items.shift();
+        }
+        front() {
+          return this.items[0];
+        }
+        isEmpty() {
+          return this.items.length == 0;
+        }
+        size() {
+          return this.items.length;
+        }
+        print() {
+          console.log(this.items.toString());
+        }
+      }
+      let queue = new Queue();
+      console.log(queue.isEmpty()); //输出true
+      queue.enqueue("John");
+      queue.enqueue("Jack");
+      queue.enqueue("Camila");
+      queue.print();
+      console.log(queue.size()); //输出3
+      console.log(queue.isEmpty()); //输出false
+    </script>
+  </body>
+</html>
